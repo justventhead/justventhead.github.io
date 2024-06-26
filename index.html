@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Just Vent LET GO</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="container">
+      <h1>JUST VENT LET GO</h1>
+      <h3>How are you feeling today?</h3>
+      <form id="timer-form">
+        <p>Let Go Timer:</p>
+        <input type="radio" id="timer90" name="timer" value="90" />
+        <label for="timer90">90 seconds</label><br />
+        <input type="radio" id="timer120" name="timer" value="120" />
+        <label for="timer120">120 seconds</label><br />
+        <input type="radio" id="timer180" name="timer" value="180" />
+        <label for="timer180">180 seconds</label><br />
+      </form>
+      <textarea
+        id="journal-entry"
+        placeholder="Start typing how you are feeling...and watch it disappear"
+        disabled
+      ></textarea
+      ><br />
+      <button
+        id="start-session-button"
+        onclick="startAnotherSession()"
+        disabled
+      >
+        Want more time?
+      </button>
+    </div>
+
+    <script src="script.js"></script>
+  </body>
+</html>
