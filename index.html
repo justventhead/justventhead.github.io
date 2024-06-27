@@ -7,33 +7,60 @@
     <link rel="stylesheet" href="styles.css" />
   </head>
   <body>
-    <div class="container">
-      <h1>JUST VENT LET GO</h1>
-      <h3>How are you feeling today?</h3>
-      <form id="timer-form">
-        <p>Let Go Timer:</p>
-        <input type="radio" id="timer90" name="timer" value="90" />
-        <label for="timer90">90 seconds</label><br />
-        <input type="radio" id="timer120" name="timer" value="120" />
-        <label for="timer120">120 seconds</label><br />
-        <input type="radio" id="timer180" name="timer" value="180" />
-        <label for="timer180">180 seconds</label><br />
-      </form>
-      <textarea
-        id="journal-entry"
-        placeholder="Start typing how you are feeling...and watch it disappear"
-        disabled
-      ></textarea
-      ><br />
-      <button
-        id="start-session-button"
-        onclick="startAnotherSession()"
-        disabled
-      >
-        Want more time?
-      </button>
+    <div id="landing-page" class="landing-page">
+      <h1>Welcome to Just Vent LET GO</h1>
+      <p>Your private space to let out your thoughts and feelings.</p>
+      <button onclick="enterApp()">Enter</button>
     </div>
 
+    <div class="container" style="display: none">
+      <h1>JUST VENT LET GO</h1>
+      <div class="view-buttons">
+        <button id="journal-view-button">Journal Entry</button>
+        <button id="video-view-button">Record Video</button>
+      </div>
+      <div id="journal-view" class="view active">
+        <h3>How are you feeling today?</h3>
+        <form id="timer-form-journal">
+          <p>Let Go Timer:</p>
+          <input type="radio" id="timer90" name="timer" value="90" />
+          <label for="timer90">90 seconds</label><br />
+          <input type="radio" id="timer120" name="timer" value="120" />
+          <label for="timer120">120 seconds</label><br />
+          <input type="radio" id="timer180" name="timer" value="180" />
+          <label for="timer180">180 seconds</label><br />
+        </form>
+        <textarea
+          id="journal-entry"
+          placeholder="Start typing how you are feeling..."
+          disabled
+        ></textarea
+        ><br />
+        <button id="start-session-button-journal" disabled>
+          Want more time?
+        </button>
+      </div>
+      <div id="video-view" class="view">
+        <h3>Record Your Message</h3>
+        <form id="timer-form-video">
+          <p>Let Go Timer:</p>
+          <input type="radio" id="timer90v" name="timer" value="90" />
+          <label for="timer90v">90 seconds</label><br />
+          <input type="radio" id="timer120v" name="timer" value="120" />
+          <label for="timer120v">120 seconds</label><br />
+          <input type="radio" id="timer180v" name="timer" value="180" />
+          <label for="timer180v">180 seconds</label><br />
+        </form>
+        <video id="preview-video" width="640" height="480" autoplay></video>
+        <button id="start-recording-button">Start Recording</button>
+        <button id="stop-recording-button" style="display: none">
+          Stop Recording
+        </button>
+        <button id="start-session-button-video" disabled>
+          Want more time?
+        </button>
+      </div>
+    </div>
     <script src="script.js"></script>
   </body>
 </html>
