@@ -95,6 +95,12 @@ function playReversedVideo() {
   };
 }
 
+document.addEventListener("DOMContentLoaded", function () {
+  document.getElementById("enter-button").addEventListener("click", enterApp);
+  enableJournalEntry();
+  setupRecording();
+});
+
 function enterApp() {
   document.getElementById("landing-page").style.display = "none";
   document.querySelector(".container").style.display = "block";
