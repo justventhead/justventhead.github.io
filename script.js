@@ -2,8 +2,85 @@ let deleteTimer = null;
 let mediaRecorder;
 let recordedChunks = [];
 let stream;
+let isRecording = false; // Flag to track recording state
 
-// Function to enable or disable radio buttons
+document.addEventListener("DOMContentLoaded", function () {
+  document.getElementById("enter-button").addEventListener("click", enterApp);
+  document
+    .getElementById("journal-view-button")
+    .addEventListener("click", () => switchView("journal-view"));
+  document
+    .getElementById("video-view-button")
+    .addEventListener("click", () => switchView("video-view"));
+  enableJournalEntry();
+  setupRecording();
+});
+
+function enterApp() {
+  document.getElementById("landing-page").style.display = "none";
+  document.querySelector(".container").style.display = "block";
+}
+
+function switchView(viewToShow) {
+  document.querySelectorAll(".view").forEach((view) => {
+    if (view.classList.contains("active")) {
+      deactivateView(view.id);
+    }
+    view.classList.remove("active");
+  });
+  document.getElementById(viewToShow).classList.add("active");
+  activateView(viewToShow);
+}
+
+function deactivateView(viewId) {
+  if (viewId === "journal-view") {
+    if (deleteTimer) {
+      clearTimeout(deleteTimer);
+      document.getElementById("journal-entry").setAttribute("disabled", "true");
+      document
+        .getElementById("start-session-button-journal")
+        .setAttribute("disabled", "true");
+    }
+  } else if (viewId === "video-view") {
+    if (isRecording) {
+      stopRecording();
+    }
+    const video = document.getElementById("preview-video");
+    video.pause();
+    if (video.srcObject) {
+      const tracks = video.srcObject.getTracks();
+      tracks.forEach((track) => track.stop());
+      video.srcObject = null;
+    }
+  }
+}
+
+function activateView(viewId) {
+  if (viewId === "video-view") {
+    setupVideoStream();
+  }
+}
+
+function setupVideoStream() {
+  navigator.mediaDevices
+    .getUserMedia({ video: true, audio: true })
+    .then((localStream) => {
+      stream = localStream;
+      const video = document.getElementById("preview-video");
+      video.srcObject = stream;
+      mediaRecorder = new MediaRecorder(stream);
+
+      mediaRecorder.ondataavailable = (event) => {
+        if (event.data.size > 0) {
+          recordedChunks.push(event.data);
+        }
+      };
+
+      mediaRecorder.onstop = playReversedVideo;
+    })
+    .catch((error) => console.error("Error accessing webcam: ", error));
+}
+
 function setTimerControls(enabled) {
   const radioButtons = document.querySelectorAll('input[type="radio"]');
   radioButtons.forEach((button) => {
@@ -11,7 +88,6 @@ function setTimerControls(enabled) {
   });
 }
 
-// Function to enable journal entry when a timer is selected
 function enableJournalEntry() {
   const timerForm = document.getElementById("timer-form-journal");
   timerForm.addEventListener("change", function () {
@@ -21,7 +97,7 @@ function enableJournalEntry() {
     document.getElementById("journal-entry").removeAttribute("disabled");
     document.getElementById("journal-entry").focus();
 
-    setTimerControls(false); // Disable timer controls
+    setTimerControls(false);
 
     if (deleteTimer) {
       clearTimeout(deleteTimer);
@@ -33,28 +109,15 @@ function enableJournalEntry() {
       document
         .getElementById("start-session-button-journal")
         .removeAttribute("disabled");
-      setTimerControls(true); // Re-enable timer controls after timer ends
+      setTimerControls(true);
     }, selectedDuration * 1000);
   });
 }
 
-// Setup video recording with selected timer duration
-function setupRecording() {
-  const timerForm = document.getElementById("timer-form-video");
-  timerForm.addEventListener("change", function () {
-    const selectedDuration = document.querySelector(
-      'input[name="timer"]:checked'
-    ).value;
-    document.getElementById("start-recording-button").onclick = () => {
-      startRecording(selectedDuration);
-    };
-  });
-}
-
-// Start recording video with a timer to stop automatically
 function startRecording(duration) {
   recordedChunks = [];
   mediaRecorder.start();
+  isRecording = true;
   document.getElementById("start-recording-button").style.display = "none";
   document.getElementById("stop-recording-button").style.display = "inline";
 
@@ -65,14 +128,14 @@ function startRecording(duration) {
   }, duration * 1000);
 }
 
-// Stop video recording and handle UI changes
 function stopRecording() {
   if (mediaRecorder.state === "recording") {
     mediaRecorder.stop();
   }
+  isRecording = false;
   document.getElementById("start-recording-button").style.display = "inline";
   document.getElementById("stop-recording-button").style.display = "none";
-  setTimerControls(true); // Re-enable timer controls after recording stops
+  setTimerControls(true);
 }
 
 function playReversedVideo() {
@@ -94,26 +157,3 @@ function playReversedVideo() {
     };
   };
 }
-
-document.addEventListener("DOMContentLoaded", function () {
-  document.getElementById("enter-button").addEventListener("click", enterApp);
-  enableJournalEntry();
-  setupRecording();
-});
-
-function enterApp() {
-  document.getElementById("landing-page").style.display = "none";
-  document.querySelector(".container").style.display = "block";
-}
-
-document
-  .getElementById("journal-view-button")
-  .addEventListener("click", () => switchView("journal-view"));
-document
-  .getElementById("video-view-button")
-  .addEventListener("click", () => switchView("video-view"));
-
-document.addEventListener("DOMContentLoaded", function () {
-  enableJournalEntry();
-  setupRecording();
-});
