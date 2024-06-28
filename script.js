@@ -17,8 +17,17 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 
 function enterApp() {
-  document.getElementById("landing-page").style.display = "none";
-  document.querySelector(".container").style.display = "block";
+  console.log("Entering app..."); // This should show in your console when the button is clicked
+  var landingPage = document.getElementById("landing-page");
+  var mainContainer = document.querySelector(".container");
+
+  if (landingPage && mainContainer) {
+    landingPage.style.display = "none";
+    mainContainer.style.display = "block";
+    console.log("Display changed successfully");
+  } else {
+    console.error("Failed to find elements:", { landingPage, mainContainer });
+  }
 }
 
 function switchView(viewToShow) {
@@ -81,8 +90,10 @@ function setupVideoStream() {
     .catch((error) => console.error("Error accessing webcam: ", error));
 }
 
-function setTimerControls(enabled) {
-  const radioButtons = document.querySelectorAll('input[type="radio"]');
+function setTimerControls(enabled, formId) {
+  const radioButtons = document.querySelectorAll(
+    `#${formId} input[type="radio"]`
+  );
   radioButtons.forEach((button) => {
     button.disabled = !enabled;
   });
@@ -97,7 +108,7 @@ function enableJournalEntry() {
     document.getElementById("journal-entry").removeAttribute("disabled");
     document.getElementById("journal-entry").focus();
 
-    setTimerControls(false);
+    setTimerControls(false, "timer-form-journal");
 
     if (deleteTimer) {
       clearTimeout(deleteTimer);
@@ -109,21 +120,34 @@ function enableJournalEntry() {
       document
         .getElementById("start-session-button-journal")
         .removeAttribute("disabled");
-      setTimerControls(true);
+      setTimerControls(true, "timer-form-journal");
     }, selectedDuration * 1000);
   });
+}
+
+function setupRecording() {
+  const timerForm = document.getElementById("timer-form-video");
+  timerForm.addEventListener("change", function () {
+    const selectedDuration = parseInt(
+      document.querySelector('input[name="timer"]:checked').value,
+      10
+    );
+    setTimerControls(false, "timer-form-video");
+    startRecording(selectedDuration);
+  });
+
+  setupVideoStream(); // Setup video stream on page load
 }
 
 function startRecording(duration) {
   recordedChunks = [];
   mediaRecorder.start();
   isRecording = true;
-  document.getElementById("start-recording-button").style.display = "none";
-  document.getElementById("stop-recording-button").style.display = "inline";
 
   setTimeout(() => {
     if (mediaRecorder.state === "recording") {
       stopRecording();
+      setTimerControls(true, "timer-form-video");
     }
   }, duration * 1000);
 }
@@ -133,9 +157,6 @@ function stopRecording() {
     mediaRecorder.stop();
   }
   isRecording = false;
-  document.getElementById("start-recording-button").style.display = "inline";
-  document.getElementById("stop-recording-button").style.display = "none";
-  setTimerControls(true);
 }
 
 function playReversedVideo() {

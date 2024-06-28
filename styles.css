@@ -1,3 +1,4 @@
+/* General Body and Font Styles */
 body {
   font-family: Arial, sans-serif;
   margin: 0;
@@ -9,6 +10,7 @@ body {
   background-color: #f0f0f0;
 }
 
+/* Landing Page Styles */
 .landing-page {
   width: 100%;
   display: flex;
@@ -28,6 +30,7 @@ body {
   color: #333;
 }
 
+/* Styles for the Main Container */
 .container {
   display: none; /* Hidden by default, shown after entering the app */
   width: 90%;
@@ -35,6 +38,7 @@ body {
   text-align: center;
 }
 
+/* View Buttons Styles */
 .view-buttons button {
   margin: 10px;
   padding: 10px 20px;
@@ -50,16 +54,18 @@ body {
   background-color: #0056b3;
 }
 
+/* View Container Styles */
 .view {
-  display: none;
+  display: none; /* Initially hidden */
   padding: 20px;
   box-sizing: border-box;
 }
 
 .view.active {
-  display: block;
+  display: block; /* Shown when active */
 }
 
+/* Textarea and Video Styles */
 textarea,
 video {
   width: 100%;
@@ -68,14 +74,17 @@ video {
   border-radius: 5px;
 }
 
+/* Form Paragraph Styles */
 form p {
   margin: 15px 0 5px;
 }
 
+/* Radio Button Styles */
 input[type="radio"] {
   margin-right: 5px;
 }
 
+/* General Button Styles */
 button {
   margin-top: 5px;
   padding: 8px 16px;
